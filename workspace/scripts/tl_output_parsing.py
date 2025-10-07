@@ -46,18 +46,32 @@ class MacroOutputStats(tl.output_parsing.OutputStats):
     def from_output_stats(
         output_stats: tl.output_parsing.OutputStats, scale_computes: bool = True
     ):
-        return MacroOutputStats(
-            percent_utilization=output_stats.percent_utilization,
-            computes=output_stats.computes,
-            cycles=output_stats.cycles,
-            cycle_seconds=output_stats.cycle_seconds,
-            per_component_energy=output_stats.per_component_energy,
-            per_component_area=output_stats.per_component_area,
-            variables=output_stats.variables,
-            accesses={},#output_stats.accesses,
-            mapping=output_stats.mapping,
-            scale_computes=scale_computes,
-        )
+        try:
+            return MacroOutputStats(
+                percent_utilization=output_stats.percent_utilization,
+                computes=output_stats.computes,
+                cycles=output_stats.cycles,
+                cycle_seconds=output_stats.cycle_seconds,
+                per_component_energy=output_stats.per_component_energy,
+                per_component_area=output_stats.per_component_area,
+                variables=output_stats.variables,
+                # accesses={},#output_stats.accesses,
+                mapping=output_stats.mapping,
+                scale_computes=scale_computes,
+            )
+        except:
+            return MacroOutputStats(
+                percent_utilization=output_stats.percent_utilization,
+                computes=output_stats.computes,
+                cycles=output_stats.cycles,
+                cycle_seconds=output_stats.cycle_seconds,
+                per_component_energy=output_stats.per_component_energy,
+                per_component_area=output_stats.per_component_area,
+                variables=output_stats.variables,
+                accesses={},#output_stats.accesses,
+                mapping=output_stats.mapping,
+                scale_computes=scale_computes,
+            )
 
     @staticmethod
     def aggregate(*args, **kwargs):

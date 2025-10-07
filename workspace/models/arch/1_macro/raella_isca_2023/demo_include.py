@@ -110,7 +110,7 @@ def run_raella(
         variables["WEIGHT_ENCODING_FUNC"] = "offset_encode_hist"
         variables["CIM_UNIT_WIDTH_CELLS"] = 1
 
-    basepath = "/home/tanner/research/cimloop/cimloop/workspace/models/memory_cells/"
+    basepath = "/home/workspace/models/memory_cells/"
     if device_type == "Protonic":
         variables["CELL_CONFIG"] = basepath + "/ecram_demo.cell.yaml"
     else:
@@ -164,6 +164,7 @@ def run_raella(
             s += f"\n{text}"
     s += "\nTotal Energy: {:.2f} fJ/MAC".format(result[0].per_compute("energy") * 1e15)
     fig.suptitle(s, x=-0.2, y=0.5)
+    # fig.show()
 
 
 # =====================================================================================================================
