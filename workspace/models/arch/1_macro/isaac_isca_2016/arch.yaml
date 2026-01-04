@@ -16,7 +16,7 @@ architecture:
       n_entries: ARRAY_PARALLEL_INPUTS * array.spatial.meshX * SUPPORTED_OUTPUT_BITS
       depth: n_entries // width # depth=Capacity/width
     constraints:
-      dataspace: {keep_only: [Outputs]}
+      dataspace: {keep_only: [Inputs]}
       temporal: {factors_only: [X=0], factors: []} # 0 = all
     enabled: True
 
