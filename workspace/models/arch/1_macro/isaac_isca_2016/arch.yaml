@@ -16,7 +16,7 @@ architecture:
       n_entries: ARRAY_PARALLEL_INPUTS * array.spatial.meshX * SUPPORTED_OUTPUT_BITS
       depth: n_entries // width # depth=Capacity/width
     constraints:
-      dataspace: {keep_only: [Outputs]}
+      dataspace: {keep_only: [Inputs]}
       temporal: {factors_only: [X=0], factors: []} # 0 = all
     enabled: True
 
@@ -29,7 +29,7 @@ architecture:
       n_entries: ARRAY_PARALLEL_OUTPUTS * array.spatial.meshX * SUPPORTED_OUTPUT_BITS * 2
       depth: n_entries // width # depth=Capacity/width
       datawidth: 2 # Need 2x datawidth for accumulation. The paper had 1x but we change to 2
-                   # to match the other models 
+                   # to match the other models
     constraints:
       dataspace: {keep_only: [Outputs]}
       temporal: {factors_only: [X=0], factors: []} # 0 = all
@@ -39,7 +39,7 @@ architecture:
     name: shift_add
     <<<: [*component_defaults, *keep_outputs, *no_temporal_reuse]
     subclass: shift_add
-    attributes: 
+    attributes:
       <<<: *cim_component_attributes
       width: OUTPUT_BITS
       n_bits: OUTPUT_BITS
@@ -83,7 +83,7 @@ architecture:
     max_utilization: {spatial: {factors: [('C=' + str(row.get_fanout()))]}}
 
   - !Component # CiM unit stores weights and computes MACs. Defined in include/defines.yaml.
-    <<<: *cim_unit 
+    <<<: *cim_unit
 
   - !Hierarchical           # Virtualize an XxYxZ-bit MAC as multiple MAC units.
     nodes: *virtualized_mac # Defined in include/defines.yaml.

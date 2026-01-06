@@ -111,21 +111,53 @@ def get_spec(
 def run_mapper(
     spec: tl.Specification,
     accelergy_verbose: bool = False,
+    output_dir: str = None,
+    keep_output: bool = False,
 ) -> dict:
-    output_dir = get_run_dir()
+    """
+    Run the timeloop mapper on the given specification.
 
-    run_prefix = f"{output_dir}/timeloop-mapper"
+    Args:
+        spec: Timeloop specification
+        accelergy_verbose: Whether to run accelergy in verbose mode
+        output_dir: Directory to save output files. If None, uses a temporary directory.
+        keep_output: If True and output_dir is None, keeps the temporary output directory.
+                    If output_dir is provided, files are always kept.
+
+    Returns:
+        MacroOutputStats with the simulation results
+    """
+    temp_dir = get_run_dir()
+    target_dir = output_dir if output_dir else temp_dir
+
+    # Ensure target directory exists
+    os.makedirs(target_dir, exist_ok=True)
+
+    run_prefix = f"{temp_dir}/timeloop-mapper"
     mapper_result = tl.call_mapper(
         specification=spec,
-        output_dir=output_dir,
-        log_to=os.path.join(output_dir, f"{run_prefix}.log"),
+        output_dir=temp_dir,
+        log_to=os.path.join(temp_dir, f"{run_prefix}.log"),
     )
     if accelergy_verbose:
         tl.call_accelergy_verbose(
             specification=spec,
-            output_dir=output_dir,
-            log_to=os.path.join(output_dir, "accelergy.log"),
+            output_dir=temp_dir,
+            log_to=os.path.join(temp_dir, "accelergy.log"),
         )
+
+    # Copy output files to the specified output directory if different from temp
+    if output_dir and output_dir != temp_dir:
+        for filename in os.listdir(temp_dir):
+            src = os.path.join(temp_dir, filename)
+            dst = os.path.join(output_dir, filename)
+            if os.path.isfile(src):
+                shutil.copy2(src, dst)
+        # Clean up temp directory
+        shutil.rmtree(temp_dir)
+    elif not keep_output and not output_dir:
+        # Clean up temp directory if not keeping output
+        pass  # Leave as-is for backward compatibility
 
     return MacroOutputStats.from_output_stats(mapper_result)
 

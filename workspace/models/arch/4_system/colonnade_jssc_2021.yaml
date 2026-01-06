@@ -1,0 +1,32 @@
+{{include_text('defines.yaml')}}
+
+architecture:
+  # ======================= Top level is !Hierarchical =======================
+  # System configuration optimized for Colonnade JSSC 2021 SRAM-based CiM architecture
+  nodes:
+  - !Container # Top-level system with power gating
+    name: system
+    <<<: [*container_defaults]
+    attributes: {has_power_gating: True}
+
+  - !Component # External LPDDR4 memory optimized for Colonnade bandwidth
+    name: main_memory
+    <<<: [*component_defaults]
+    subclass: DRAM
+    attributes:
+      depth: INF
+      width: 1024
+      read_bandwidth: 512     # Tuned for Colonnade SRAM-based CiM (~2.2 GB/s)
+      write_bandwidth: 512    # Tuned for Colonnade SRAM-based CiM (~2.2 GB/s)
+      type: "LPDDR4"
+    constraints:
+      dataspace: {keep_only: ["*"]}
+      temporal:
+        no_iteration_over_dataspaces: !nomerge [] # Can iterate over weights
+        permutation: [X, Y, Z, Q, P, N, G, C, M, R, S] # Weight-stationary
+
+  - !Container # Single Colonnade macro in system
+    name: macro_in_system
+    <<<: [*container_defaults]
+    spatial: {meshX: 1}
+    constraints: {spatial: {must_iterate_over_dataspaces: [Weights]}}

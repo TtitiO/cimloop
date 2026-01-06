@@ -1,0 +1,31 @@
+{{include_text('defines.yaml')}}
+
+architecture:
+  # ======================= Top level is !Hierarchical =======================
+  nodes:
+  - !Container # Top-level system
+    name: system
+    <<<: [*container_defaults]
+    attributes: {has_power_gating: True}
+
+  - !Component # External memory with bandwidth limitation
+    name: main_memory
+    <<<: [*component_defaults]
+    subclass: DRAM
+    attributes:
+      depth: INF
+      width: 128
+      read_bandwidth: 32
+      write_bandwidth: 32
+      type: "LPDDR4"
+    constraints:
+      dataspace: {keep_only: ["*"]}
+      temporal:
+        no_iteration_over_dataspaces: !nomerge [] # Can iterate over weights
+        permutation: [X, Y, Z, Q, P, N, G, C, M, R, S] # Weight-stationary
+
+  - !Container # Have one macro in this system
+    name: macro_in_system
+    <<<: [*container_defaults]
+    spatial: {meshX: 1}
+    constraints: {spatial: {must_iterate_over_dataspaces: [Weights]}}

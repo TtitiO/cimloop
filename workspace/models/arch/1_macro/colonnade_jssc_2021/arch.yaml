@@ -20,7 +20,7 @@ architecture:
     name: digital_logic_input_ports
     <<<: [*component_defaults, *keep_inputs, *no_coalesce]
     subclass: colonnade_cim_logic_input_port
-    attributes: 
+    attributes:
       width: DAC_RESOLUTION
       n_instances: column.get_fanout()
       switching_activity: (AVERAGE_INPUT_VALUE * (1 - AVERAGE_INPUT_VALUE)) ** 0.5
@@ -65,7 +65,7 @@ architecture:
     spatial: {meshY: N_REGS_PER_COL}
     constraints: {spatial: {maximize_dims: [[R, S, C]]}}
     max_utilization: {spatial: {factors: [('C=' + str(row_group.get_fanout()))]}}
-    
+
 
   - !Component # Register stores partially-accumulated outputs
     name: register
@@ -87,7 +87,7 @@ architecture:
     name: cim_logic
     <<<: [*component_defaults, *keep_weights, *no_coalesce]
     subclass: colonnade_cim_logic
-    attributes: 
+    attributes:
       width: CIM_UNIT_WIDTH_CELLS * BITS_PER_CELL
       switching_activity: N_ADDERS_CRITICAL_PATH * (AVERAGE_INPUT_VALUE * (1 - AVERAGE_INPUT_VALUE)) ** 0.5
 

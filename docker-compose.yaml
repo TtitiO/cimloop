@@ -1,7 +1,7 @@
 #
 # Docker-compose file for running exercises
 #
-# Notes: 
+# Notes:
 #    The READMEs are put in ./workspace
 #    The workspace will be owned by $USER_UID:$USER_GID
 #
@@ -16,7 +16,7 @@
 #        % DOCKER_ARCH=amd64 docker-compose up
 #
 #        % If you are using arm CPU (Apple M1/M2)
-#        % DOCKER_ARCH=arm64 docker-compose up 
+#        % DOCKER_ARCH=arm64 docker-compose up
 #
 #        % If you want to avoid typing "DOCKER_ARCH=" every time,
 #        % "export DOCKER_ARCH=<your architecture>" >> ~/.bashrc && source ~/.bashrc
@@ -29,14 +29,12 @@
 # Option2: try the 192.168.X.X with the same token as shown in the output (X.X can be obtained by `hostname -I`)
 # Option3: if you have access to docker GUI app (e.g., Kitematic for docker temrinal), try open the web page there with the token
 
-version: '3'
-
 services:
   tutorial:
     hostname: tutorial
     image: timeloopaccelergy/timeloop-accelergy-pytorch:latest-${DOCKER_ARCH}
     ports:
-      - "8888:8888"
+      - "8889:8888"
     volumes:
       - ./workspace:/home/workspace
     environment:
